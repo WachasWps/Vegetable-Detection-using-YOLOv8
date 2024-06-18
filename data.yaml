@@ -1,0 +1,33 @@
+names:
+- apple
+- banana
+- bell_pepper
+- cabbage
+- carrot
+- chilli_pepper
+- corn
+- cucumber
+- eggplant
+- garlic
+- grape
+- kiwi
+- lemon
+- lettuce
+- mango
+- onion
+- orange
+- pineapple
+- potato
+- sweetpotato
+- tomato
+- watermelon
+nc: 22
+roboflow:
+  license: Public Domain
+  project: fruits-and-vegetables-knetf
+  url: https://universe.roboflow.com/zzigmug/fruits-and-vegetables-knetf/dataset/3
+  version: 3
+  workspace: zzigmug
+test: C:\Users\wacha\OneDrive\Desktop\Storage\Kleos\custom\datasets\test
+train: C:\Users\wacha\OneDrive\Desktop\Storage\Kleos\custom\datasets\train
+val: C:\Users\wacha\OneDrive\Desktop\Storage\Kleos\custom\datasets\valid

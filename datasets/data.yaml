@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 3
+names: ['--', '---', '----']
+
+roboflow:
+  workspace: zzigmug
+  project: fruits-and-vegetables-knetf
+  version: 5
+  license: Public Domain
+  url: https://universe.roboflow.com/zzigmug/fruits-and-vegetables-knetf/dataset/5
