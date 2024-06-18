@@ -4,7 +4,7 @@
   publish = "static/"        # Optional: Directory to publish (if you have static files)
 
 [context.production.environment]
-  PYTHON_VERSION = "3.9"     # Python version used in your environment
+  PYTHON_VERSION = "3.8"     # Python version used in your environment
 
 [[plugins]]
   package = "@netlify/plugin-functions-core"
