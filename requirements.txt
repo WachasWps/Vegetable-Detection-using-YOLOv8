@@ -1,0 +1,5 @@
+Flask==3.0.3
+numpy==2.0.0
+torch==2.3.1
+torchvision==0.18.1
+ultralytics==8.2.35  # Replace with the correct version of Ultralytics YOLOv5 package
