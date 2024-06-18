@@ -2,9 +2,3 @@
   command = "python app.py"  # Adjust this to match your Flask startup command
   functions = "functions/"   # Directory where Netlify Functions are stored
   publish = "static/"        # Optional: Directory to publish (if you have static files)
-
-[[plugins]]
-  package = "@netlify/plugin-functions-core"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
