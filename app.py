@@ -1,60 +1,74 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from pathlib import Path
+from time import time
+from PIL import Image
+import numpy as np
+from io import BytesIO
 from ultralytics import YOLO
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Adjust CORS as needed for production
 
-# Load the trained model
+# Load the YOLOv5 model
 model = YOLO('best.pt')
 
-# Define the path to the data.yaml file
-data_path = 'C:/Users/wacha/OneDrive/Desktop/Storage/Kleos/custom/datasets/data.yaml'
-
-# Define a function to process an uploaded image
+# Function to process uploaded image
 def process_image(image_path):
-    results = model.predict(source=image_path, conf=0.25, save=True, save_txt=True)
+    try:
+        img = Image.open(image_path)
+        results = model(img)  # Perform YOLOv5 inference
+        detected_objects = []
 
-    detected_objects = []
-    for result in results:
-        boxes = result.boxes.xyxy.cpu().numpy()  # Convert to numpy array if necessary
-        confidences = result.boxes.conf.cpu().numpy()  # Convert to numpy array if necessary
-        classes = result.boxes.cls.cpu().numpy()  # Convert to numpy array if necessary
+        for result in results:
+            for box in result.boxes:
+                class_id = int(box.cls[0])
+                confidence = float(box.conf[0])
+                class_name = model.names[class_id]
 
-        for i in range(len(boxes)):
-            class_id = int(classes[i])
-            confidence = float(confidences[i])
-            class_name = model.names[class_id]
+                detected_objects.append({
+                    "class_name": class_name,
+                    "confidence": confidence
+                })
 
-            detected_objects.append({
-                "class_name": class_name,
-                "confidence": confidence
-            })
+        return detected_objects
 
-    return detected_objects
+    except Exception as e:
+        app.logger.error(f"Exception occurred during image processing: {str(e)}")
+        return None
 
-# Route to upload an image and get predictions
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    
-    file = request.files['file']
+# Route to handle file upload and prediction
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    try:
+        if 'file' not in request.files:
+            return jsonify({"error": "No file part"}), 400
 
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
+        file = request.files['file']
 
-    if file:
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+
+        # Save the file to a temporary location
         filename = secure_filename(file.filename)
-        image_path = f"uploads/{filename}"  # Save uploaded file to a directory
+        image_path = f"uploads/{int(time())}_{filename}"
         file.save(image_path)
 
         # Process the uploaded image
         detected_objects = process_image(image_path)
 
-        # Return JSON response
-        return jsonify({"predictions": detected_objects}), 200
+        # Remove the uploaded image after processing (optional)
+        Path(image_path).unlink()
 
-    return jsonify({"error": "Unknown error"}), 500
+        if not detected_objects:
+            return jsonify({"error": "No objects detected"}), 404
+        else:
+            return jsonify({"predictions": detected_objects}), 200
+
+    except Exception as e:
+        app.logger.error(f"Exception occurred during image processing: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
