@@ -1,5 +1,4 @@
-flask
-flask-cors
-pillow
-ultralytics
-gunicorn
+flask==2.0.2
+flask-cors==3.1.1
+pillow==8.4.0
+numpy==1.21.5
