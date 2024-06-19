@@ -1,4 +1,4 @@
 [build]
-  command = "gunicorn -w 4 -b :${PORT} app:app"
+  command = "python app.py"
   functions = "functions/"
   publish = "static/"
