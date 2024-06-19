@@ -1,4 +1,7 @@
 [build]
-  command = "python app.py"
+  command = "gunicorn -w 4 -b :$PORT app:app"
   functions = "functions/"
   publish = "static/"
+
+[build.environment]
+  PYTHON_VERSION = "3.8"
