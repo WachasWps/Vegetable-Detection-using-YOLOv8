@@ -1,4 +1,4 @@
 [build]
-  command = "python app.py"  # Adjust this to match your Flask startup command
-  functions = "functions/"   # Directory where Netlify Functions are stored
-  publish = "static/"        # Optional: Directory to publish (if you have static files)
+  command = "gunicorn -w 4 -b :${PORT} app:app"
+  functions = "functions/"
+  publish = "static/"
