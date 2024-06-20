@@ -5,8 +5,8 @@ from pathlib import Path
 from time import time
 from PIL import Image
 import numpy as np
-from io import BytesIO
 from ultralytics import YOLO
+import os
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # Adjust CORS as needed for production
@@ -53,6 +53,10 @@ def upload_file():
         # Save the file to a temporary location
         filename = secure_filename(file.filename)
         image_path = f"uploads/{int(time())}_{filename}"
+        
+        # Ensure the uploads directory exists
+        os.makedirs(os.path.dirname(image_path), exist_ok=True)
+        
         file.save(image_path)
 
         # Process the uploaded image
@@ -71,4 +75,4 @@ def upload_file():
         return jsonify({"error": "Internal server error"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=os.environ.get('PORT', 5000))
