@@ -1,6 +1,8 @@
-Flask==3.0.3
-Flask-Cors==4.0.1
-waitress
-ultralytics==8.2.36
-Pillow==10.3.0
-numpy==1.26.4
+Flask
+Flask-Cors
+gunicorn
+numpy
+pandas
+torch
+torchvision
+ultralytics
