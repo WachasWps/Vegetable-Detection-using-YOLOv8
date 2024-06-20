@@ -1,8 +1,8 @@
-__pycache__
+.git
 *.pyc
-*.pyo
-*.pyd
-*.db
-*.sqlite3
-*.log
-uploads
+__pycache__
+tests
+docs
+.DS_Store
+.env
+node_modules
