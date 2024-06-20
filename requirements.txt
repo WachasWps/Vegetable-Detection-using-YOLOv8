@@ -1,6 +1,6 @@
 Flask==3.0.3
 Flask-Cors==4.0.1
-gunicorn
+waitress
 ultralytics==8.2.36
 Pillow==10.3.0
 numpy==1.26.4
