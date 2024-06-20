@@ -4,5 +4,5 @@ gunicorn==22.0.0
 numpy==1.26.4
 pandas==2.2.2
 torch==2.3.1+cpu  # Ensure this is the CPU version
-torchvision==0.18.1+cpu
+torchvision==0.18.1
 ultralytics==8.2.36
