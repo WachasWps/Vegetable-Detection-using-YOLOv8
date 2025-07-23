@@ -7,9 +7,11 @@ from PIL import Image
 import numpy as np
 from ultralytics import YOLO
 import os
+from flasgger import Swagger
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  # Adjust CORS as needed for production
+Swagger(app)  # Initialize Swagger UI
 
 # Load the YOLOv5 model
 model = YOLO('best.pt')
@@ -41,6 +43,39 @@ def process_image(image_path):
 # Route to handle file upload and prediction
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    """
+    Upload an image and get vegetable detection results
+    ---
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file
+        type: file
+        required: true
+        description: The image file to upload
+    responses:
+      200:
+        description: Detection results
+        schema:
+          type: object
+          properties:
+            predictions:
+              type: array
+              items:
+                type: object
+                properties:
+                  class_name:
+                    type: string
+                  confidence:
+                    type: number
+      400:
+        description: No file part or no selected file
+      404:
+        description: No objects detected
+      500:
+        description: Internal server error
+    """
     try:
         if 'file' not in request.files:
             return jsonify({"error": "No file part"}), 400
@@ -73,6 +108,13 @@ def upload_file():
     except Exception as e:
         app.logger.error(f"Exception occurred during image processing: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
+
+@app.route('/')
+def root():
+    return (
+        '<h2>Welcome to the Vegetable Detection API!</h2>'
+        '<p>Visit the <a href="/apidocs">Swagger UI documentation</a> to try the API.</p>'
+    )
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.environ.get('PORT', 5000))
